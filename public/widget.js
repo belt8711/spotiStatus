@@ -21,32 +21,16 @@ async function loadSpotify() {
 
 		const data = await res.json();
 
-		if (!data.online) {
-			element.innerHTML = "Not listening to anything";
+		if (!data.online && !settings.offline_status) {
+			element.innerHTML = settings.offline_html;
 			return;
 		}
 
-		element.innerHTML = `
-			<div class="spotistatus-widget">
-				<img class="spotistatus-album-art" src="${data.img}" alt="Album art">
-
-				<a class="spotistatus-song" href="${data.songUrl}" target="_blank">
-					${data.song}
-				</a>
-
-				<a class="spotistatus-artist" href="${data.artistUrl}" target="_blank">
-					${data.artist}
-				</a>
-
-				<a class="spotistatus-album" href="${data.albumUrl}" target="_blank">
-					${data.album}
-				</a>
-			</div>
-		`;
+		element.innerHTML = settings.custom_html;
 
 	} catch (err) {
 		console.error(err);
-		element.innerHTML = "Spotify unavailable";
+		element.innerHTML = settings.offline_html;
 	}
 }
 
