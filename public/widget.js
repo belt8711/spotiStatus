@@ -4,6 +4,10 @@ const settings = JSON.parse(
 	decodeURIComponent(document.currentScript.dataset.settings)
 );
 
+function renderTemplate(template, data = {}) {
+	return template.replace(/\$\{data\.(\w+)\}/g, (_, key) => data[key] ?? "");
+}
+
 async function loadSpotify() {
 	try {
 		const res = await fetch(
@@ -22,15 +26,15 @@ async function loadSpotify() {
 		const data = await res.json();
 
 		if (!data.online && !settings.offline_status) {
-			element.innerHTML = settings.offline_html;
+			element.innerHTML = renderTemplate(settings.offline_html, data);
 			return;
 		}
 
-		element.innerHTML = settings.custom_html;
+		element.innerHTML = renderTemplate(settings.custom_html, data);
 
 	} catch (err) {
 		console.error(err);
-		element.innerHTML = settings.offline_html;
+		element.innerHTML = renderTemplate(settings.offline_html, {});
 	}
 }
 
