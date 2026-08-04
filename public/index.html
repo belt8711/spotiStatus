@@ -82,6 +82,52 @@
 			font-size: 14px;
 			color: #aaa;
 		}
+
+		#preview-step {
+			margin-top: 25px;
+			text-align: left;
+		}
+
+		.preview-box {
+			margin-top: 15px;
+			padding: 20px;
+			background: #101010;
+			border-radius: 12px;
+			border: 1px solid #333;
+		}
+
+		.spotistatus-widget {
+			text-align: center;
+		}
+
+		.spotistatus-album-art {
+			width: 180px;
+			height: 180px;
+			object-fit: cover;
+			border-radius: 12px;
+			margin-bottom: 20px;
+		}
+
+		.spotistatus-widget table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13px;
+			text-align: left;
+		}
+
+		.spotistatus-widget th {
+			background: #222;
+			color: white;
+			padding: 8px;
+		}
+
+		.spotistatus-widget td {
+			background: #181818;
+			color: #b3b3b3;
+			padding: 8px;
+			border-top: 1px solid #333;
+			word-break: break-word;
+		}
 	</style>
 </head>
 
@@ -106,6 +152,53 @@
 				Copy this token into your WidgetStar <b>spotifytoken</b> setting.
 			</div>
 		</div>
+
+		<div id="preview-step" style="display:none;">
+			<p>Live widget preview:</p>
+
+			<div class="preview-box">
+				<div id="widget">
+					<div class="spotistatus-widget">
+						<img id="album-art" class="spotistatus-album-art" src="" alt="Album art">
+
+						<table>
+							<tr>
+								<th>Variable</th>
+								<th>Value</th>
+							</tr>
+							<tr>
+								<td>song</td>
+								<td id="song"></td>
+							</tr>
+							<tr>
+								<td>artist</td>
+								<td id="artist"></td>
+							</tr>
+							<tr>
+								<td>album</td>
+								<td id="album"></td>
+							</tr>
+							<tr>
+								<td>songUrl</td>
+								<td id="songUrl"></td>
+							</tr>
+							<tr>
+								<td>artistUrl</td>
+								<td id="artistUrl"></td>
+							</tr>
+							<tr>
+								<td>albumUrl</td>
+								<td id="albumUrl"></td>
+							</tr>
+							<tr>
+								<td>img</td>
+								<td id="img"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<script>
@@ -114,7 +207,31 @@
 
 		if (token) {
 			document.getElementById("token-step").style.display = "block";
+			document.getElementById("preview-step").style.display = "block";
 			document.getElementById("token").value = token;
+
+			const script = document.createElement("script");
+			script.src = "https://spotistatus.onrender.com/widget.js";
+
+			script.dataset.settings = JSON.stringify({
+				spotifytoken: token,
+				custom_html: document.getElementById("widget").innerHTML,
+				offline_html: document.getElementById("widget").innerHTML,
+				offline_status: false
+			});
+
+			document.body.appendChild(script);
+		}
+
+		function updateWidget(data) {
+			document.getElementById("song").textContent = data.song || "";
+			document.getElementById("artist").textContent = data.artist || "";
+			document.getElementById("album").textContent = data.album || "";
+			document.getElementById("songUrl").textContent = data.songUrl || "";
+			document.getElementById("artistUrl").textContent = data.artistUrl || "";
+			document.getElementById("albumUrl").textContent = data.albumUrl || "";
+			document.getElementById("img").textContent = data.img || "";
+			document.getElementById("album-art").src = data.img || "";
 		}
 	</script>
 </body>
