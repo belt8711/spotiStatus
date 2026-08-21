@@ -3,10 +3,18 @@ require("dotenv").config();
 async function userCurrent(req, res) {
 try {
 	const refreshToken = req.body.token;
+	const clientId =     req.body.client_id || process.env.SPOTIFY_CLIENT_ID;
+	const clientSecret = req.body.client_secret || process.env.SPOTIFY_CLIENT_SECRET;
 
 	if (!refreshToken) {
 	return res.status(400).json({
 		error: "Missing token"
+	});
+	}
+
+	if (!clientId || !clientSecret) {
+	return res.status(400).json({
+		error: "Missing Spotify client credentials"
 	});
 	}
 
@@ -17,11 +25,11 @@ try {
 		method: "POST",
 		headers: {
 		"Content-Type": "application/x-www-form-urlencoded",
-		"Authorization":
-			"Basic " +
-			Buffer.from(
-			`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-			).toString("base64")
+			"Authorization":
+				"Basic " +
+				Buffer.from(
+					`${clientId}:${clientSecret}`
+				).toString("base64")
 		},
 		body: new URLSearchParams({
 		grant_type: "refresh_token",
@@ -30,10 +38,15 @@ try {
 	}
 	);
 
-	const tokenData = await response.json();
+	let tokenData;
+	try{
+		tokenData = await response.json();
 
-	if (!response.ok) {
-	throw new Error(JSON.stringify(tokenData));
+		if (!response.ok) {
+			throw new Error(tokenData);
+		}
+	} catch{
+		throw new Error("Spotify has revoked your API token, please contact widgetstar dev for a workaround");
 	}
 
 	const accessToken = tokenData.access_token;

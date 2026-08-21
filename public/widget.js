@@ -18,13 +18,14 @@ async function loadSpotify() {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					token: settings.spotifytoken
+					token:         settings.spotifytoken,
+					client_id:     settings.spotify_client_id,
+					client_secret: settings.spotify_client_secret
 				})
 			}
 		);
 
 		const data = await res.json();
-
 		if (!data.online && !settings.offline_status) {
 			element.innerHTML = renderTemplate(settings.offline_html, data);
 			return;
@@ -33,7 +34,8 @@ async function loadSpotify() {
 		element.innerHTML = renderTemplate(settings.custom_html, data);
 
 	} catch (err) {
-		console.error(err);
+		console.log("Spotify has revoked your API token, please contact widgetstar dev for a workaround")
+		console.error("Spotify has revoked your API token, please contact widgetstar dev for a workaround");
 		element.innerHTML = renderTemplate(settings.offline_html, {});
 	}
 }
