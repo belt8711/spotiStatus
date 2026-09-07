@@ -38,6 +38,17 @@
 			line-height: 1.5;
 		}
 
+		input {
+			width: 100%;
+			padding: 12px;
+			margin-top: 10px;
+			border-radius: 8px;
+			border: 1px solid #333;
+			background: #101010;
+			color: #ddd;
+			font-family: monospace;
+		}
+
 		button {
 			margin-top: 15px;
 			padding: 12px 24px;
@@ -48,12 +59,10 @@
 			font-size: 16px;
 			font-weight: bold;
 			cursor: pointer;
-			transition: 0.2s;
 		}
 
 		button:hover {
 			background: #1ed760;
-			transform: scale(1.03);
 		}
 
 		#token-step {
@@ -82,6 +91,17 @@
 			font-size: 14px;
 			color: #aaa;
 		}
+
+		.field {
+			margin-top: 15px;
+			text-align: left;
+		}
+
+		.field label {
+			display: block;
+			color: #ccc;
+			font-size: 14px;
+		}
 	</style>
 </head>
 
@@ -90,20 +110,54 @@
 		<h1>SpotiStatus</h1>
 
 		<p>
-			Connect your Spotify account to generate a widget token.
+			Enter your Spotify Developer App credentials to connect Spotify.
 		</p>
 
-		<a href="/login">
-			<button>Connect Spotify</button>
-		</a>
+		<form action="/login" method="GET">
+
+			<div class="field">
+				<label>Client ID</label>
+				<input
+					type="text"
+					name="client_id"
+					required
+					autocomplete="off"
+				>
+			</div>
+
+			<div class="field">
+				<label>Client Secret</label>
+				<input
+					type="password"
+					name="client_secret"
+					required
+					autocomplete="off"
+				>
+			</div>
+
+			<button type="submit">
+				Connect Spotify
+			</button>
+
+		</form>
 
 		<div id="token-step" style="display:none;">
-			<p>Your refresh token:</p>
+			<p>Your WidgetStar settings:</p>
 
-			<textarea id="token" readonly></textarea>
+			<div class="field">
+				<label>Spotify Token</label>
+				<textarea id="token" readonly></textarea>
+			</div>
 
 			<div class="notice">
-				Copy this token into your WidgetStar <b>spotifytoken</b> setting.
+				Copy the token into your WidgetStar
+				<b>spotifytoken</b> setting.
+
+				<br><br>
+
+				Also enter the same Spotify Developer
+				<b>Client ID</b> and <b>Client Secret</b>
+				into the corresponding WidgetStar settings.
 			</div>
 		</div>
 	</div>

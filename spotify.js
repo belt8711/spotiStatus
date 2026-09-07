@@ -38,15 +38,23 @@ try {
 	}
 	);
 
-	let tokenData;
-	try{
-		tokenData = await response.json();
+	const responseText = await response.text();
 
-		if (!response.ok) {
-			throw new Error(tokenData);
-		}
-	} catch{
-		throw new Error("Spotify has revoked your API token, please contact widgetstar dev for a workaround");
+	let tokenData;
+
+	try{
+		tokenData = JSON.parse(responseText);
+	} catch {
+		tokenData = {
+			error: responseText
+		};
+	}
+
+	if (!response.ok) {
+		throw new Error(
+			tokenData.error ||
+			"Spotify token request failed"
+		);
 	}
 
 	const accessToken = tokenData.access_token;
