@@ -6,7 +6,6 @@ try {
 	const clientId =     req.body.client_id || process.env.SPOTIFY_CLIENT_ID;
 	const clientSecret = req.body.client_secret || process.env.SPOTIFY_CLIENT_SECRET;
 
-	console.log(req.body);
 	console.table(req.body);
 
 	console.log("Using Spotify Client ID:", clientId);

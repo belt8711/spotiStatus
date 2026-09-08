@@ -19,8 +19,8 @@ async function loadSpotify() {
 				},
 				body: JSON.stringify({
 					token:         settings.spotifytoken,
-					client_id:     settings.spotify_client_id,
-					client_secret: settings.spotify_client_secret
+					client_id:     settings.client_id,
+					client_secret: settings.client_secret
 				})
 			}
 		);
@@ -41,3 +41,5 @@ async function loadSpotify() {
 }
 
 loadSpotify();
+
+setInterval(loadSpotify, 10000);
